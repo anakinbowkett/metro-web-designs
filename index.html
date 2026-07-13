@@ -1,1 +1,409 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Booking Page Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#181A20;
+    --paper:#F7F3EC;
+    --paper-dim:#EFEAE0;
+    --line:#D9D2C4;
+    --accent:#FF5A36;
+    --accent-ink:#FFF3EE;
+    --good:#1E8E5A;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  .mono{font-family:'IBM Plex Mono', monospace;}
+  .display{font-family:'Fraunces', serif;}
+
+  a{color:inherit; text-decoration:none;}
+  button{font-family:inherit; cursor:pointer; border:none;}
+
+  /* ---------- NAV ---------- */
+  nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:22px 6vw;
+    border-bottom:1px solid var(--line);
+  }
+  .brand-mark{
+    display:flex; align-items:center; gap:10px;
+  }
+  .brand-dot{width:9px;height:9px;border-radius:50%;background:var(--accent);}
+  .brand-name{font-weight:600; letter-spacing:-0.01em; font-size:15px;}
+  .nav-tag{
+    font-size:11px; letter-spacing:0.08em; text-transform:uppercase;
+    color:#8A8374; border:1px solid var(--line); padding:5px 10px; border-radius:20px;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    display:grid;
+    grid-template-columns:1.1fr 0.9fr;
+    gap:40px;
+    padding:64px 6vw 40px;
+    align-items:center;
+  }
+  @media (max-width:860px){
+    .hero{grid-template-columns:1fr; padding:40px 6vw 20px;}
+  }
+  .eyebrow{
+    font-size:12px; letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--accent); font-weight:600; margin-bottom:18px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .eyebrow::before{content:''; width:16px; height:1px; background:var(--accent);}
+  h1{
+    font-size:clamp(34px, 5vw, 58px);
+    font-weight:500;
+    line-height:1.04;
+    letter-spacing:-0.02em;
+    margin-bottom:22px;
+  }
+  h1 em{font-style:italic; color:var(--accent);}
+  .sub{
+    font-size:17px; line-height:1.55; color:#4B4638; max-width:480px; margin-bottom:32px;
+  }
+  .cta-row{display:flex; gap:14px; flex-wrap:wrap; align-items:center;}
+  .cta-primary{
+    background:var(--ink); color:var(--paper);
+    padding:15px 26px; border-radius:8px; font-weight:600; font-size:14.5px;
+    display:inline-flex; align-items:center; gap:8px;
+    transition:transform .15s ease, background .15s ease;
+  }
+  .cta-primary:hover{transform:translateY(-2px); background:#2A2D36;}
+  .cta-secondary{
+    font-size:14px; font-weight:500; color:#5C5646; padding:15px 6px;
+    border-bottom:1px solid var(--line);
+  }
+  .microcopy{
+    margin-top:16px; font-size:12.5px; color:#8A8374;
+  }
+
+  /* ---------- SIGNATURE CARD STACK ---------- */
+  .stage{
+    position:relative;
+    height:420px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .phone{
+    width:250px; height:400px;
+    background:var(--ink);
+    border-radius:32px;
+    padding:10px;
+    box-shadow:0 30px 60px -20px rgba(24,26,32,0.35);
+    position:relative;
+  }
+  .phone-screen{
+    width:100%; height:100%;
+    background:var(--paper);
+    border-radius:24px;
+    overflow:hidden;
+    position:relative;
+  }
+  .screen-state{
+    position:absolute; inset:0;
+    padding:18px 16px;
+    display:flex; flex-direction:column; gap:10px;
+    transition:opacity .8s ease, transform .8s ease;
+  }
+  /* messy DM state */
+  #state-chaos{opacity:1; transform:translateY(0);}
+  .dm-bubble{
+    background:var(--paper-dim); border:1px solid var(--line);
+    border-radius:10px; padding:9px 11px; font-size:11px; color:#6b6558;
+    line-height:1.4;
+  }
+  .dm-bubble b{color:var(--ink); font-weight:600;}
+  .dm-bubble.miss{border-color:#E7B8AC; background:#FBE9E4; color:#A4432A;}
+  .chaos-label{
+    font-size:9.5px; text-transform:uppercase; letter-spacing:.08em; color:#B3AB98; margin-top:2px;
+  }
+  /* clean booked state */
+  #state-clean{
+    opacity:0; transform:translateY(10px);
+    align-items:flex-start; justify-content:flex-start;
+  }
+  .ticket{
+    width:100%;
+    background:var(--ink); color:var(--paper);
+    border-radius:14px; padding:16px;
+    position:relative;
+  }
+  .ticket-top{
+    display:flex; justify-content:space-between; align-items:flex-start;
+    margin-bottom:14px;
+  }
+  .ticket-label{font-size:9px; text-transform:uppercase; letter-spacing:.1em; color:#8B8778;}
+  .ticket-status{
+    font-size:9.5px; background:var(--good); color:#fff; padding:3px 8px; border-radius:20px; font-weight:600;
+  }
+  .ticket-name{font-size:16px; font-weight:500; margin-bottom:2px; font-family:'Fraunces', serif;}
+  .ticket-service{font-size:11.5px; color:#B3AB98; margin-bottom:14px;}
+  .ticket-row{display:flex; justify-content:space-between; font-size:11px; padding:6px 0; border-top:1px solid rgba(255,255,255,0.1);}
+  .ticket-row span:first-child{color:#8B8778;}
+  .below-ticket{margin-top:14px; font-size:10.5px; color:#8A8374; text-align:center;}
+
+  .stage-badge{
+    position:absolute; top:-6px; right:-6px;
+    background:var(--accent); color:#fff; font-size:10px; font-weight:700;
+    padding:5px 10px; border-radius:20px; letter-spacing:.03em;
+    transform:rotate(4deg);
+  }
+
+  /* ---------- PROOF STRIP ---------- */
+  .proof-strip{
+    display:flex; justify-content:center; gap:8px; flex-wrap:wrap;
+    padding:0 6vw 60px; font-size:12px; color:#8A8374;
+  }
+  .proof-strip span{padding:6px 12px; border:1px solid var(--line); border-radius:20px;}
+
+  /* ---------- HOW IT WORKS ---------- */
+  .section{padding:70px 6vw;}
+  .section-head{max-width:560px; margin-bottom:44px;}
+  .section-eyebrow{
+    font-size:12px; text-transform:uppercase; letter-spacing:.1em; color:var(--accent); font-weight:600; margin-bottom:10px;
+  }
+  .section-title{font-size:clamp(24px,3vw,34px); font-weight:500; letter-spacing:-0.01em;}
+
+  .steps{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:30px;
+  }
+  @media (max-width:860px){.steps{grid-template-columns:1fr;}}
+  .step{border-top:2px solid var(--ink); padding-top:18px;}
+  .step-num{font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--accent); margin-bottom:14px;}
+  .step h3{font-size:18px; font-weight:600; margin-bottom:8px; font-family:'Fraunces', serif;}
+  .step p{font-size:14px; line-height:1.55; color:#5C5646;}
+
+  /* ---------- PERSONAL BANNER ---------- */
+  .banner{
+    background:var(--ink); color:var(--paper);
+    border-radius:18px; margin:0 6vw 70px;
+    padding:40px 6vw;
+    display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap;
+  }
+  .banner-left .display{font-size:22px; font-weight:500;}
+  .banner-left span{color:var(--accent);}
+  .banner-left p{font-size:13.5px; color:#B3AB98; margin-top:6px;}
+  .cta-primary.on-dark{background:var(--accent); color:#fff;}
+  .cta-primary.on-dark:hover{background:#E64A28;}
+
+  /* ---------- CALENDLY ---------- */
+  .book-section{padding:0 6vw 90px;}
+  .book-frame{
+    border:1px solid var(--line); border-radius:16px; overflow:hidden;
+    background:#fff; min-height:640px;
+  }
+  .calendly-fallback{
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    height:640px; text-align:center; padding:40px; gap:14px;
+  }
+  .calendly-fallback p{font-size:13px; color:#8A8374; max-width:340px;}
+
+  footer{
+    padding:30px 6vw; border-top:1px solid var(--line);
+    display:flex; justify-content:space-between; font-size:12px; color:#8A8374; flex-wrap:wrap; gap:10px;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="brand-mark">
+    <div class="brand-dot"></div>
+    <div class="brand-name" id="siteBrand">Booking Concept</div>
+  </div>
+  <div class="nav-tag">Private preview</div>
+</nav>
+
+<section class="hero">
+  <div>
+    <div class="eyebrow" id="industryEyebrow">Built for local barbershops</div>
+    <h1>Your bookings, <em>working</em><br>while you're not.</h1>
+    <p class="sub" id="heroSub">
+      Right now clients are messaging <span id="bizInline">your shop</span> on Instagram hoping for a reply.
+      Half of those never get answered in time. This page replaces the DM chaos with one link that books itself.
+    </p>
+    <div class="cta-row">
+      <a href="#book" class="cta-primary">See how booking would look ↓</a>
+      <a href="#steps" class="cta-secondary">How it works</a>
+    </div>
+    <div class="microcopy">No setup on your end yet — this is just a live preview, built specifically to show you the idea.</div>
+  </div>
+
+  <div class="stage">
+    <div class="phone">
+      <div class="phone-screen">
+        <div class="screen-state" id="state-chaos">
+          <div class="chaos-label">Instagram · today</div>
+          <div class="dm-bubble"><b>Chloe:</b> hiya are you free thurs for a cut?</div>
+          <div class="dm-bubble miss"><b>Sam:</b> hello?? still there</div>
+          <div class="dm-bubble"><b>Priya:</b> can i grab a slot this wknd</div>
+          <div class="dm-bubble miss"><b>Jordan:</b> tried calling, no answer</div>
+          <div class="chaos-label" style="margin-top:auto;">4 unanswered · avg reply 6h+</div>
+        </div>
+        <div class="screen-state" id="state-clean">
+          <div class="ticket">
+            <div class="stage-badge">Booked ✓</div>
+            <div class="ticket-top">
+              <div class="ticket-label">Confirmation</div>
+              <div class="ticket-status">Confirmed</div>
+            </div>
+            <div class="ticket-name">Priya Shah</div>
+            <div class="ticket-service" id="ticketService">Skin fade + beard tidy</div>
+            <div class="ticket-row"><span>Date</span><span>Thu, 3:30pm</span></div>
+            <div class="ticket-row"><span>With</span><span id="ticketBiz">Your shop</span></div>
+            <div class="ticket-row"><span>Reminder</span><span>Sent automatically</span></div>
+          </div>
+          <div class="below-ticket">Booked in 40 seconds. Zero DMs.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="proof-strip">
+  <span>No app to install</span>
+  <span>Works from your Instagram bio</span>
+  <span>Texts remind clients automatically</span>
+  <span>You keep every booking, even asleep</span>
+</div>
+
+<section class="section" id="steps">
+  <div class="section-head">
+    <div class="section-eyebrow">How it actually works</div>
+    <div class="section-title">Three steps, no admin for you.</div>
+  </div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num mono">01 / LINK</div>
+      <h3>One link replaces your bio</h3>
+      <p>Clients tap it straight from Instagram or Google instead of messaging you. It works exactly like a shop window that's always open.</p>
+    </div>
+    <div class="step">
+      <div class="step-num mono">02 / BOOK</div>
+      <h3>They pick a slot, you don't lift a finger</h3>
+      <p>Real available times only — no double-booking, no back-and-forth. Confirmed in under a minute.</p>
+    </div>
+    <div class="step">
+      <div class="step-num mono">03 / REMIND</div>
+      <h3>Reminders go out on their own</h3>
+      <p>Fewer no-shows, because the system chases the client — not you, mid-haircut, on your personal phone.</p>
+    </div>
+  </div>
+</section>
+
+<div class="banner">
+  <div class="banner-left">
+    <div class="display">This preview was mapped for <span id="bannerBiz">your shop</span>.</div>
+    <p>If the layout's right, this becomes yours — live, on your own booking link, this week.</p>
+  </div>
+  <a href="#book" class="cta-primary on-dark">Book a 10-min walkthrough</a>
+</div>
+
+<section class="book-section" id="book">
+  <div class="section-head">
+    <div class="section-eyebrow">Next step</div>
+    <div class="section-title">Grab 10 minutes — I'll show you it live.</div>
+  </div>
+  <div class="book-frame" id="calendlyMount">
+    <div class="calendly-fallback">
+      <div class="display" style="font-size:18px;">Calendly link not attached yet</div>
+      <p>Add <span class="mono">?calendly=https://calendly.com/yourlink</span> to this page's URL to embed a live booking calendar here.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>Built by Anakin · local web design, Southwest UK</div>
+  <div id="footerBiz" class="mono"></div>
+</footer>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+
+  const biz = params.get('biz') || 'your shop';
+  const industry = (params.get('industry') || 'barber').toLowerCase();
+  const color = params.get('color');
+  const service = params.get('service');
+  const calendly = params.get('calendly');
+
+  if (color) document.documentElement.style.setProperty('--accent', color.startsWith('#') ? color : '#' + color);
+
+  const industryCopy = {
+    barber: { eyebrow: 'Built for local barbershops', service: 'Skin fade + beard tidy' },
+    salon: { eyebrow: 'Built for local hair salons', service: 'Colour + cut' },
+    beauty: { eyebrow: 'Built for beauty & aesthetics studios', service: 'Lash lift + tint' },
+    nails: { eyebrow: 'Built for nail studios', service: 'Gel manicure' },
+    pt: { eyebrow: 'Built for personal trainers', service: '1:1 session' },
+    grooming: { eyebrow: 'Built for dog groomers', service: 'Full groom' },
+    tattoo: { eyebrow: 'Built for tattoo studios', service: 'Consultation' },
+    valeting: { eyebrow: 'Built for mobile valeting', service: 'Full valet' },
+    driving: { eyebrow: 'Built for driving instructors', service: '1hr lesson' },
+    cleaning: { eyebrow: 'Built for cleaning services', service: 'Standard clean' }
+  };
+  const copy = industryCopy[industry] || industryCopy.barber;
+
+  document.getElementById('siteBrand').textContent = biz;
+  document.getElementById('industryEyebrow').textContent = copy.eyebrow;
+  document.getElementById('bizInline').textContent = biz;
+  document.getElementById('ticketBiz').textContent = biz;
+  document.getElementById('bannerBiz').textContent = biz;
+  document.getElementById('ticketService').textContent = service || copy.service;
+  document.getElementById('footerBiz').textContent = 'Preview mapped for ' + biz;
+  document.title = biz + ' — Booking Preview';
+
+  // signature animation: chaos <-> clean loop
+  const chaos = document.getElementById('state-chaos');
+  const clean = document.getElementById('state-clean');
+  let showingClean = false;
+  function flip() {
+    showingClean = !showingClean;
+    if (showingClean) {
+      chaos.style.opacity = '0';
+      chaos.style.transform = 'translateY(-10px)';
+      clean.style.opacity = '1';
+      clean.style.transform = 'translateY(0)';
+    } else {
+      chaos.style.opacity = '1';
+      chaos.style.transform = 'translateY(0)';
+      clean.style.opacity = '0';
+      clean.style.transform = 'translateY(10px)';
+    }
+  }
+  setInterval(flip, 3200);
+
+  // Calendly embed
+  if (calendly) {
+    const mount = document.getElementById('calendlyMount');
+    mount.innerHTML = '';
+    const script = document.createElement('script');
+    script.src = 'https://assets.calendly.com/assets/external/widget.js';
+    document.body.appendChild(script);
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://assets.calendly.com/assets/external/widget.css';
+    document.head.appendChild(link);
+    const widget = document.createElement('div');
+    widget.className = 'calendly-inline-widget';
+    widget.setAttribute('data-url', calendly);
+    widget.style.minWidth = '320px';
+    widget.style.height = '640px';
+    mount.appendChild(widget);
+  }
+</script>
+
+</body>
+</html>
